@@ -1,241 +1,254 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Sistema de Chamadas — Burle Marx &amp; Perimetral</title>
-  <meta name="description" content="Sistema profissional de controle de chamadas escolares para as escolas Burle Marx e Perimetral, com calendário, registros por sala e relatórios em PDF." />
-  <meta name="theme-color" content="#BF625A" />
-  <meta property="og:title" content="Sistema de Chamadas — Burle Marx &amp; Perimetral" />
-  <meta property="og:description" content="Calendário escolar, controle de chamadas por turno e geração de relatórios profissionais em PDF." />
-  <meta property="og:type" content="website" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" />
-  <link rel="stylesheet" href="chamado.css" />
-</head>
-<body>
+  <html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sistema de Chamadas — Burle Marx &amp; Perimetral</title>
+    <meta name="description" content="Sistema de controle de chamadas escolares para as escolas Burle Marx e Perimetral." />
+    <meta name="theme-color" content="#05447D" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" />
+    <link rel="stylesheet" href="chamado.css" />
+  </head>
+  <body>
 
-<div class="app">
-  <header class="app-header">
-    <div>
-      <h1>Sistema de Chamadas</h1>
-      <p class="subtitle">Controle escolar · Calendário · Relatórios em PDF</p>
-    </div>
-    <div class="header-badges">
-      <span class="school-badge badge-burle">Burle Marx (Terças)</span>
-      <span class="school-badge badge-perimetral">Perimetral (Quintas)</span>
-    </div>
-  </header>
-
-  <div class="summary-card total stat-strip">
-    <div class="summary-label">Registros Salvos</div>
-    <div class="summary-value" id="savedCounter">0</div>
-  </div>
-
-  <nav class="tabs" role="tablist" aria-label="Navegação principal">
-    <button class="tab active" role="tab" data-tab="calendar"   aria-selected="true"  aria-controls="tab-calendar"   type="button">📅 Calendário</button>
-    <button class="tab"        role="tab" data-tab="attendance" aria-selected="false" aria-controls="tab-attendance" type="button">✅ Chamada</button>
-    <button class="tab"        role="tab" data-tab="reports"    aria-selected="false" aria-controls="tab-reports"    type="button">📊 Relatórios</button>
-    <button class="tab"        role="tab" data-tab="settings"   aria-selected="false" aria-controls="tab-settings"   type="button">⚙️ Configurações</button>
-  </nav>
-
-  <!-- CALENDÁRIO -->
-  <section class="card" id="tab-calendar" role="tabpanel" aria-labelledby="tab-calendar">
-    <div class="calendar-header">
-      <div class="month-nav">
-        <button class="btn btn-outline btn-sm" id="prevMonth" aria-label="Mês anterior" type="button">‹</button>
-        <div class="month-title" id="monthTitle" aria-live="polite"></div>
-        <button class="btn btn-outline btn-sm" id="nextMonth" aria-label="Próximo mês" type="button">›</button>
-        <button class="btn btn-outline btn-sm" id="todayBtn" type="button">Hoje</button>
-      </div>
-      <div class="legend">
-        <div class="legend-item"><span class="legend-color" style="background:rgba(191,98,90,0.2)"></span> Burle Marx</div>
-        <div class="legend-item"><span class="legend-color" style="background:rgba(94,170,128,0.25)"></span> Perimetral</div>
-        <div class="legend-item"><span class="legend-color" style="background:#38FF91"></span> Com dados</div>
-      </div>
-    </div>
-    <div class="calendar-grid" id="calendarGrid">
-      <div class="cal-day-header">Dom</div>
-      <div class="cal-day-header">Seg</div>
-      <div class="cal-day-header">Ter</div>
-      <div class="cal-day-header">Qua</div>
-      <div class="cal-day-header">Qui</div>
-      <div class="cal-day-header">Sex</div>
-      <div class="cal-day-header">Sáb</div>
-    </div>
-  </section>
-
-  <!-- CHAMADA -->
-  <section class="card" id="tab-attendance" role="tabpanel" hidden>
-    <div class="grid grid-3 mb-20">
-      <div class="form-group">
-        <label for="attSchool">Escola</label>
-        <select id="attSchool">
-          <option value="burle" selected>Burle Marx (Terças)</option>
-          <option value="perimetral">Perimetral (Quintas)</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="attDate">Data</label>
-        <input type="date" id="attDate" />
-      </div>
-      <div class="form-group">
-        <label for="attPeriod">Turno</label>
-        <select id="attPeriod">
-          <option value="manha" selected>Manhã (Salas A–I)</option>
-          <option value="tarde">Tarde (Salas J–R)</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="attendance-summary" id="attendanceSummary" aria-live="polite"></div>
-    <div class="classroom-grid" id="classroomGrid"></div>
-
-    <div class="actions-row">
-      <button class="btn btn-outline" id="clearAttendance" type="button">Limpar turno</button>
-      <button class="btn btn-primary" id="saveAttendance" type="button">💾 Salvar Chamada</button>
-    </div>
-  </section>
-
-  <!-- RELATÓRIOS -->
-  <section class="card" id="tab-reports" role="tabpanel" hidden>
-    <div class="report-filters">
-      <div class="form-group">
-        <label for="repSchool">Escola</label>
-        <select id="repSchool">
-          <option value="both" selected>Ambas</option>
-          <option value="burle">Burle Marx</option>
-          <option value="perimetral">Perimetral</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="repPeriod">Período</label>
-        <select id="repPeriod">
-          <option value="month" selected>Mês Atual</option>
-          <option value="year">Ano Todo</option>
-          <option value="custom">Personalizado</option>
-        </select>
-      </div>
-      <div class="form-group" id="customStartGroup" hidden>
-        <label for="repStartDate">Início</label>
-        <input type="date" id="repStartDate" />
-      </div>
-      <div class="form-group" id="customEndGroup" hidden>
-        <label for="repEndDate">Fim</label>
-        <input type="date" id="repEndDate" />
-      </div>
-      <div class="form-group">
-        <label for="repRoom">Sala</label>
-        <input id="repRoom" placeholder="Ex: A (vazio = todas)" maxlength="1" />
-      </div>
-      <div class="filter-actions">
-        <button class="btn btn-primary"   id="generateReport" type="button">📄 Gerar PDF</button>
-        <button class="btn btn-secondary" id="exportCSV"      type="button">⬇️ CSV</button>
-        <button class="btn btn-outline"   id="printReport"    type="button">🖨️ Imprimir</button>
-      </div>
-    </div>
-
-    <div class="summary-cards" id="summaryCards"></div>
-
-    <div class="table-wrap">
-      <table class="report-table" id="reportTable">
-        <thead>
-          <tr>
-            <th>Data</th>
-            <th>Escola</th>
-            <th>Turno</th>
-            <th>Sala</th>
-            <th>Presença</th>
-            <th class="text-right">Crianças</th>
-          </tr>
-        </thead>
-        <tbody id="reportBody"></tbody>
-      </table>
-    </div>
-    <div class="empty-state" id="emptyReport" hidden>
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
-        <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-      </svg>
-      <p>Nenhum registro encontrado para os filtros selecionados.</p>
-    </div>
-  </section>
-
-  <!-- CONFIGURAÇÕES -->
-  <section class="card" id="tab-settings" role="tabpanel" hidden>
-    <div class="grid grid-2">
+  <div class="app">
+    <header class="app-header">
       <div>
-        <h3 class="section-title">📚 Salas Configuradas</h3>
-        <p class="muted small mb-16">18 salas por escola (A–R) · 9 manhã / 9 tarde</p>
-        <div id="settingsGrid"></div>
+        <h1>Sistema de Chamadas</h1>
+        <p class="subtitle">Controle escolar &middot; Calendário &middot; Relatórios em PDF &middot; Supabase</p>
       </div>
+      <div class="header-badges">
+        <span class="school-badge badge-burle">Burle Marx (Terças)</span>
+        <span class="school-badge badge-perimetral">Perimetral (Quintas)</span>
+        <span class="sync-badge"><span class="sync-dot" id="syncDot"></span><span id="syncLabel">Conectando...</span></span>
+      </div>
+    </header>
+
+    <div class="summary-card total stat-strip">
       <div>
-        <h3 class="section-title">🗓️ Ano Letivo</h3>
-        <div class="grid grid-2 mb-16">
-          <div class="form-group">
-            <label for="schoolYear">Ano</label>
-            <select id="schoolYear">
-              <option value="2025">2025</option>
-              <option value="2026" selected>2026</option>
-              <option value="2027">2027</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="yearStart">Início das aulas</label>
-            <input type="date" id="yearStart" value="2026-02-05" />
-          </div>
-        </div>
-
-        <h3 class="section-title mt-24">💾 Dados</h3>
-        <div class="actions-wrap">
-          <button class="btn btn-outline" id="exportData"    type="button">⬇️ Exportar (JSON)</button>
-          <button class="btn btn-outline" id="importDataBtn" type="button">⬆️ Importar Dados</button>
-          <button class="btn btn-danger"  id="clearAllData"  type="button">🗑️ Limpar Tudo</button>
-        </div>
-        <p class="muted small mt-16">
-          Os dados são salvos automaticamente no navegador (localStorage).
-          Use exportar/importar para backup ou migração entre dispositivos.
-        </p>
+        <div class="summary-label">Presenças Registradas</div>
+        <div class="summary-value" id="savedCounter">—</div>
+      </div>
+      <div style="font-size:0.85rem;color:rgba(255,255,255,0.65);text-align:right;max-width:200px">
+        Dados sincronizados com<br>Supabase em tempo real
       </div>
     </div>
-  </section>
-</div>
 
-<div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
+    <nav class="tabs" role="tablist" aria-label="Navegação principal">
+      <button class="tab active" role="tab" data-tab="calendar"   aria-selected="true"  aria-controls="tab-calendar"   type="button">📅 Calendário</button>
+      <button class="tab"        role="tab" data-tab="attendance" aria-selected="false" aria-controls="tab-attendance" type="button">✅ Chamada</button>
+      <button class="tab"        role="tab" data-tab="reports"    aria-selected="false" aria-controls="tab-reports"    type="button">📊 Relatórios</button>
+      <button class="tab"        role="tab" data-tab="settings"   aria-selected="false" aria-controls="tab-settings"   type="button">⚙️ Config.</button>
+    </nav>
 
-<!-- Modal Import -->
-<div class="modal-overlay" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle" hidden>
-  <div class="modal">
-    <div class="modal-header">
-      <h3 class="modal-title" id="importModalTitle">Importar Dados</h3>
-      <button class="close-modal" id="closeImportModal" aria-label="Fechar" type="button">×</button>
-    </div>
-    <div class="form-group">
-      <label for="importTextarea">Cole o JSON exportado abaixo</label>
-      <textarea id="importTextarea" placeholder='{"attendance":{...}}'></textarea>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-outline" id="cancelImport"  type="button">Cancelar</button>
-      <button class="btn btn-primary" id="confirmImport" type="button">Importar</button>
+    <!-- CALENDÁRIO -->
+    <section class="card" id="tab-calendar" role="tabpanel" aria-labelledby="tab-calendar">
+      <div class="calendar-header">
+        <div class="month-nav">
+          <button class="btn btn-outline btn-sm" id="prevMonth" aria-label="Mês anterior" type="button">‹</button>
+          <div class="month-title" id="monthTitle" aria-live="polite"></div>
+          <button class="btn btn-outline btn-sm" id="nextMonth" aria-label="Próximo mês" type="button">›</button>
+          <button class="btn btn-outline btn-sm" id="todayBtn" type="button">Hoje</button>
+        </div>
+        <div class="legend">
+          <div class="legend-item"><span class="legend-color" style="background:rgba(252,27,15,0.15)"></span> Burle Marx</div>
+          <div class="legend-item"><span class="legend-color" style="background:rgba(40,151,252,0.18)"></span> Perimetral</div>
+          <div class="legend-item"><span class="legend-color" style="background:#EEFC38"></span> Com dados</div>
+        </div>
+      </div>
+      <div class="calendar-grid" id="calendarGrid">
+        <div class="cal-day-header">Dom</div>
+        <div class="cal-day-header">Seg</div>
+        <div class="cal-day-header">Ter</div>
+        <div class="cal-day-header">Qua</div>
+        <div class="cal-day-header">Qui</div>
+        <div class="cal-day-header">Sex</div>
+        <div class="cal-day-header">Sáb</div>
+      </div>
+    </section>
+
+    <!-- CHAMADA -->
+    <section class="card" id="tab-attendance" role="tabpanel" hidden>
+      <div class="grid grid-3 mb-20">
+        <div class="form-group">
+          <label for="attSchool">Escola</label>
+          <select id="attSchool">
+            <option value="burle" selected>Burle Marx (Terças)</option>
+            <option value="perimetral">Perimetral (Quintas)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="attDate">Data</label>
+          <input type="date" id="attDate" />
+        </div>
+        <div class="form-group">
+          <label for="attPeriod">Turno</label>
+          <select id="attPeriod">
+            <option value="manha" selected>Manhã (Salas A–I)</option>
+            <option value="tarde">Tarde (Salas J–R)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="attendance-summary" id="attendanceSummary" aria-live="polite"></div>
+      <div class="classroom-grid" id="classroomGrid"></div>
+
+      <div class="actions-row">
+        <button class="btn btn-outline" id="clearAttendance" type="button">Limpar turno</button>
+        <button class="btn btn-primary" id="saveAttendance" type="button">💾 Salvar no Supabase</button>
+      </div>
+    </section>
+
+    <!-- RELATÓRIOS -->
+    <section class="card" id="tab-reports" role="tabpanel" hidden>
+      <div class="report-filters">
+        <div class="form-group">
+          <label for="repSchool">Escola</label>
+          <select id="repSchool">
+            <option value="both" selected>Ambas</option>
+            <option value="burle">Burle Marx</option>
+            <option value="perimetral">Perimetral</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="repPeriod">Período</label>
+          <select id="repPeriod">
+            <option value="month" selected>Mês Atual</option>
+            <option value="year">Ano Todo</option>
+            <option value="custom">Personalizado</option>
+          </select>
+        </div>
+        <div class="form-group" id="customStartGroup" hidden>
+          <label for="repStartDate">Início</label>
+          <input type="date" id="repStartDate" />
+        </div>
+        <div class="form-group" id="customEndGroup" hidden>
+          <label for="repEndDate">Fim</label>
+          <input type="date" id="repEndDate" />
+        </div>
+        <div class="form-group">
+          <label for="repRoom">Sala</label>
+          <input id="repRoom" placeholder="Ex: A (vazio = todas)" maxlength="1" />
+        </div>
+        <div class="filter-actions">
+          <button class="btn btn-primary"   id="generateReport" type="button">📄 Gerar PDF</button>
+          <button class="btn btn-secondary" id="exportCSV"      type="button">⬇️ CSV</button>
+          <button class="btn btn-outline"   id="printReport"    type="button">🖨️ Imprimir</button>
+        </div>
+      </div>
+
+      <div class="summary-cards" id="summaryCards"></div>
+
+      <div class="table-wrap">
+        <table class="report-table" id="reportTable">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Escola</th>
+              <th>Turno</th>
+              <th>Sala</th>
+              <th>Presença</th>
+              <th class="text-right">Crianças</th>
+            </tr>
+          </thead>
+          <tbody id="reportBody"></tbody>
+        </table>
+      </div>
+      <div class="empty-state" id="emptyReport" hidden>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true">
+          <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <p>Nenhum registro encontrado para os filtros selecionados.</p>
+      </div>
+    </section>
+
+    <!-- CONFIGURAÇÕES -->
+    <section class="card" id="tab-settings" role="tabpanel" hidden>
+      <div class="grid grid-2">
+        <div>
+          <h3 class="section-title">📚 Salas Configuradas</h3>
+          <p class="muted small mb-16">18 salas por escola (A–R) · 9 manhã / 9 tarde</p>
+          <div id="settingsGrid"></div>
+        </div>
+        <div>
+          <h3 class="section-title">🗓️ Ano Letivo</h3>
+          <div class="grid grid-2 mb-16">
+            <div class="form-group">
+              <label for="schoolYear">Ano</label>
+              <select id="schoolYear">
+                <option value="2025">2025</option>
+                <option value="2026" selected>2026</option>
+                <option value="2027">2027</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="yearStart">Início das aulas</label>
+              <input type="date" id="yearStart" value="2026-02-05" />
+            </div>
+          </div>
+
+          <h3 class="section-title mt-24">☁️ Banco de Dados (Supabase)</h3>
+          <p class="muted small mb-16">Os dados são salvos no Supabase e sincronizados entre dispositivos automaticamente.</p>
+          <div class="actions-wrap">
+            <button class="btn btn-outline" id="exportData"    type="button">⬇️ Backup JSON</button>
+            <button class="btn btn-outline" id="importDataBtn" type="button">⬆️ Importar JSON</button>
+            <button class="btn btn-danger"  id="clearAllData"  type="button">🗑️ Limpar Tudo</button>
+          </div>
+          <p class="muted small mt-16" style="border-left:3px solid var(--red);padding-left:10px">
+            <strong>Atenção:</strong> "Limpar Tudo" apaga todos os registros do Supabase permanentemente.
+          </p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div class="toast-container" id="toastContainer" role="status" aria-live="polite"></div>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loadingOverlay" hidden>
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p style="font-weight:600;color:var(--navy)">Carregando dados...</p>
+      <p class="muted small" style="margin-top:6px">Conectando ao Supabase</p>
     </div>
   </div>
-</div>
 
-<!-- Modal Confirm -->
-<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" hidden>
-  <div class="modal modal-sm">
-    <div class="modal-header">
-      <h3 class="modal-title" id="confirmTitle">Confirmar</h3>
-      <button class="close-modal" id="closeConfirmModal" aria-label="Fechar" type="button">×</button>
-    </div>
-    <p id="confirmMessage" class="mb-16"></p>
-    <div class="modal-actions">
-      <button class="btn btn-outline" id="confirmNo"  type="button">Cancelar</button>
-      <button class="btn btn-danger"  id="confirmYes" type="button">Confirmar</button>
+  <!-- Modal Import -->
+  <div class="modal-overlay" id="importModal" role="dialog" aria-modal="true" aria-labelledby="importModalTitle" hidden>
+    <div class="modal">
+      <div class="modal-header">
+        <h3 class="modal-title" id="importModalTitle">Importar Dados</h3>
+        <button class="close-modal" id="closeImportModal" aria-label="Fechar" type="button">&times;</button>
+      </div>
+      <div class="form-group">
+        <label for="importTextarea">Cole o JSON exportado abaixo</label>
+        <textarea id="importTextarea" placeholder='{"attendance":{...}}'></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="cancelImport"  type="button">Cancelar</button>
+        <button class="btn btn-primary" id="confirmImport" type="button">Importar</button>
+      </div>
     </div>
   </div>
-</div>
 
-<script src="chamado.js" defer></script>
-</body>
-</html>
+  <!-- Modal Confirm -->
+  <div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" hidden>
+    <div class="modal modal-sm">
+      <div class="modal-header">
+        <h3 class="modal-title" id="confirmTitle">Confirmar</h3>
+        <button class="close-modal" id="closeConfirmModal" aria-label="Fechar" type="button">&times;</button>
+      </div>
+      <p id="confirmMessage" class="mb-16"></p>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="confirmNo"  type="button">Cancelar</button>
+        <button class="btn btn-danger"  id="confirmYes" type="button">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="chamado.js" defer></script>
+  </body>
+  </html>
