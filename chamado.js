@@ -177,7 +177,7 @@
       rooms.forEach(function(room) {
         const data=saved[room]||{present:false,count:0};
         const card=document.createElement('div'); card.className='classroom-card'+(data.present?' filled':''); card.dataset.room=room;
-        card.innerHTML='<div class="classroom-header"><span class="classroom-label">Sala '+room+'</span><span class="classroom-period period-'+period+'">'+(period==='manha'?'Manha':'Tarde')+'</span></div><div class="classroom-inputs"><div class="checkbox-group"><input type="checkbox" id="pres-'+room+'"'+(data.present?' checked':'')+' data-room="'+room+'"><label for="pres-'+room+'" style="font-weight:500;cursor:pointer;">Teve aula</label></div><div class="input-row" id="countRow-'+room+'"'+(data.present?'':' hidden')+'><input type="number" id="count-'+room+'" value="'+(data.count||'')+'" min="0" max="100" placeholder="Qtd. criancas" data-room="'+room+'"></div></div>';
+        card.innerHTML='<div class="classroom-header"><span class="classroom-label">Sala '+room+'</span><span class="classroom-period period-'+period+'">'+(period==='manha'?'Manha':'Tarde')+'</span></div><div class="classroom-inputs"><div class="checkbox-group"><input type="checkbox" id="pres-'+room+'"'+(data.present?' checked':'')+' data-room="'+room+'"><label for="pres-'+room+'" style="font-weight:500;cursor:pointer;">Teve aula</label></div><div class="input-row" id="countRow-'+room+'"'+(data.present?'':' hidden')+'><input type="number" id="count-'+room+'" value="'+(data.count||'')+'" min="0" max="100" placeholder="Qtd. empréstimos" data-room="'+room+'"></div></div>';
         grid.appendChild(card);
         const chk=card.querySelector('#pres-'+room), cnt=card.querySelector('#count-'+room), row=card.querySelector('#countRow-'+room);
         chk.addEventListener('change', function(e){ const show=e.target.checked; row.hidden=!show; card.classList.toggle('filled',show); if(show){cnt.focus();cnt.select();}else cnt.value=''; });
@@ -280,9 +280,9 @@
 
     function renderSummaryCards(totals,filter) {
       let html='';
-      if (filter==='both'||filter==='burle') { html+='<div class="summary-card"><div class="summary-label">Burle Marx - Dias</div><div class="summary-value">'+totals.burle.days+'</div></div><div class="summary-card"><div class="summary-label">Burle Marx - Criancas</div><div class="summary-value">'+totals.burle.children+'</div></div>'; }
-      if (filter==='both'||filter==='perimetral') { html+='<div class="summary-card perimetral"><div class="summary-label">Perimetral - Dias</div><div class="summary-value">'+totals.perimetral.days+'</div></div><div class="summary-card perimetral"><div class="summary-label">Perimetral - Criancas</div><div class="summary-value">'+totals.perimetral.children+'</div></div>'; }
-      if (filter==='both') { html+='<div class="summary-card total"><div class="summary-label">TOTAL - Dias</div><div class="summary-value">'+(totals.burle.days+totals.perimetral.days)+'</div></div><div class="summary-card total"><div class="summary-label">TOTAL - Criancas</div><div class="summary-value">'+(totals.burle.children+totals.perimetral.children)+'</div></div>'; }
+      if (filter==='both'||filter==='burle') { html+='<div class="summary-card"><div class="summary-label">Burle Marx - Dias</div><div class="summary-value">'+totals.burle.days+'</div></div><div class="summary-card"><div class="summary-label">Burle Marx - Empréstimos</div><div class="summary-value">'+totals.burle.children+'</div></div>'; }
+      if (filter==='both'||filter==='perimetral') { html+='<div class="summary-card perimetral"><div class="summary-label">Perimetral - Dias</div><div class="summary-value">'+totals.perimetral.days+'</div></div><div class="summary-card perimetral"><div class="summary-label">Perimetral - Empréstimos</div><div class="summary-value">'+totals.perimetral.children+'</div></div>'; }
+      if (filter==='both') { html+='<div class="summary-card total"><div class="summary-label">TOTAL - Dias</div><div class="summary-value">'+(totals.burle.days+totals.perimetral.days)+'</div></div><div class="summary-card total"><div class="summary-label">TOTAL - Empréstimo</div><div class="summary-value">'+(totals.burle.children+totals.perimetral.children)+'</div></div>'; }
       $('#summaryCards').innerHTML=html;
     }
 
@@ -317,9 +317,9 @@
         return '<tr style="background:'+(i%2===0?'#fff':'#f0f4fc')+'"><td style="padding:7px 12px;border-bottom:1px solid #dde6f4">'+fBR(pISO(r.date))+'</td><td style="padding:7px 12px;border-bottom:1px solid #dde6f4;font-weight:700;color:'+(isBurle?'#C41507':'#1A6BC0')+'">'+SCHOOLS[r.school].name+'</td><td style="padding:7px 12px;border-bottom:1px solid #dde6f4">'+(morning?'Manha':'Tarde')+'</td><td style="padding:7px 12px;border-bottom:1px solid #dde6f4">Sala '+r.room+'</td><td style="padding:7px 12px;border-bottom:1px solid #dde6f4;color:#0A5A3A;font-weight:600">Presente</td><td style="padding:7px 12px;border-bottom:1px solid #dde6f4;text-align:right;font-weight:700;color:#05447D">'+r.count+'</td></tr>';
       }).join('');
       const cards=[];
-      if (sf==='both'||sf==='burle') { cards.push({label:'Burle Marx - Dias',value:totals.burle.days,color:'#FC1B0F'}); cards.push({label:'Burle Marx - Criancas',value:totals.burle.children,color:'#FC1B0F'}); }
-      if (sf==='both'||sf==='perimetral') { cards.push({label:'Perimetral - Dias',value:totals.perimetral.days,color:'#2897FC'}); cards.push({label:'Perimetral - Criancas',value:totals.perimetral.children,color:'#2897FC'}); }
-      if (sf==='both') { cards.push({label:'TOTAL - Dias',value:totalDias,color:'#C8D400'}); cards.push({label:'TOTAL - Criancas',value:totalCriancas,color:'#C8D400'}); }
+      if (sf==='both'||sf==='burle') { cards.push({label:'Burle Marx - Dias',value:totals.burle.days,color:'#FC1B0F'}); cards.push({label:'Burle Marx - Empréstimos',value:totals.burle.children,color:'#FC1B0F'}); }
+      if (sf==='both'||sf==='perimetral') { cards.push({label:'Perimetral - Dias',value:totals.perimetral.days,color:'#2897FC'}); cards.push({label:'Perimetral - Empréstimos',value:totals.perimetral.children,color:'#2897FC'}); }
+      if (sf==='both') { cards.push({label:'TOTAL - Dias',value:totalDias,color:'#C8D400'}); cards.push({label:'TOTAL -   Empréstimos',value:totalCriancas,color:'#C8D400'}); }
       const cardsHtml=cards.map(function(c){ return '<div style="flex:1;min-width:140px;background:#fff;border-radius:10px;padding:14px 18px;border-left:4px solid '+c.color+';box-shadow:0 2px 8px rgba(5,68,125,0.10)"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:#5A7090;margin-bottom:6px">'+c.label+'</div><div style="font-size:26px;font-weight:800;color:#05447D">'+c.value+'</div></div>'; }).join('');
       const html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"/><title>Relatorio de Chamadas</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"/><style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Inter,sans-serif;color:#081828;background:#fff;padding:32px}@media print{body{padding:16px}button{display:none}}</style></head><body>'+
         '<div style="background:linear-gradient(135deg,#05447D,#0A6ED1);color:#fff;padding:24px 32px;border-radius:12px;margin-bottom:24px">'+
@@ -341,7 +341,7 @@
             '<th style="padding:10px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Turno</th>'+
             '<th style="padding:10px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Sala</th>'+
             '<th style="padding:10px 12px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Presenca</th>'+
-            '<th style="padding:10px 12px;text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Criancas</th>'+
+            '<th style="padding:10px 12px;text-align:right;font-size:11px;text-transform:uppercase;letter-spacing:0.5px">Empréstimos</th>'+
           '</tr></thead>'+
           '<tbody>'+rowsHtml+'</tbody>'+
         '</table>'+
